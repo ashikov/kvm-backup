@@ -10,11 +10,18 @@ CURRENT_BACKUP_DIR=$MAIN_BACKUP_DIR/$CURRENT_DATE
 
 mkdir $CURRENT_BACKUP_DIR
 
+counter=0
 while [ "$VM_STATUS" == "running" ]; do
   echo "$VM_NAME is $VM_STATUS"
   virsh shutdown $VM_NAME
-  sleep 8
+  sleep 10
   VM_STATUS=`virsh domstate $VM_NAME`
+
+  counter=$((counter + 1)) # sending email if its runnig too long
+  if [ counter == 10 ]; then
+    echo -e "Subject: KVM backup error - IO\n\nVM $VM_NAME does not shutdown" | ssmtp errors@tdom.info
+    break
+  fi
 done
 
 echo "$VM_NAME is $VM_STATUS"
