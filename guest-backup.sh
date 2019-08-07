@@ -1,4 +1,4 @@
-#! /bin/bash
+#!/usr/bin/env bash
 
 CURRENT_DATE=`date +"%Y%m%d_%H%M%S"`
 VM_NAME="win2k8r2"
