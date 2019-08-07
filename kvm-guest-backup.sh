@@ -40,7 +40,7 @@ echo "metadata successfully saved"
 
 echo "compressing disk file"
 dd if=$DOMAIN_DIR/$VM_NAME.qcow2 | gzip -kc -3 > $CURRENT_BACKUP_DIR/$VM_NAME.qcow2.gz
-echo "Done"
+echo "done"
 
 virsh start $VM_NAME
 
