@@ -1,17 +1,15 @@
 #! /bin/bash
-# virsh destroy win2k8r2 - if it didnt shutdown
 
 CURRENT_DATE=`date +"%Y%m%d_%H%M%S"`
 VM_NAME="win2k8r2"
 VM_STATUS=`virsh domstate $VM_NAME`
 DOMAIN_DIR="/mnt/md0/kvm"
-MAIN_BACKUP_DIR="/mnt/backup_sde1/kvm/win2k8r2"
+MAIN_BACKUP_DIR="/mnt/backup_sde1/kvm/$VM_NAME"
 CURRENT_BACKUP_DIR=$MAIN_BACKUP_DIR/$CURRENT_DATE
 
 # backup server config
 BACKUP_SERVER_IP="x.x.x.x"
 SSH_USER="x"
-SSH_PASSWORD="x"
 REMOTE_BACKUP_DIR="guests/$VM_NAME"
 
 mkdir $CURRENT_BACKUP_DIR
@@ -50,7 +48,7 @@ echo "create archive file from backup directory"
 tar -cvf $MAIN_BACKUP_DIR/$CURRENT_DATE.tar.gz $CURRENT_BACKUP_DIR/
 
 echo "sending data to backup-server"
-sshpass -p "$SSH_PASSWORD" scp $MAIN_BACKUP_DIR/$CURRENT_DATE.tar.gz $SSH_USER@$BACKUP_SERVER_IP:~/guests/$VM_NAME/
+scp $MAIN_BACKUP_DIR/$CURRENT_DATE.tar.gz $SSH_USER@$BACKUP_SERVER_IP:~/$REMOTE_BACKUP_DIR/
 
 echo "deleting current backup from local storage"
 rm -rvf $CURRENT_BACKUP_DIR
